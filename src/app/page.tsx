@@ -1,101 +1,346 @@
-import Image from "next/image";
+'use client'
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+import React, { useState } from 'react'
+import {
+  CheckCircle,
+  XCircle,
+  RotateCcw,
+  Gift,
+  Heart,
+  Play,
+} from 'lucide-react'
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+interface Question {
+  id: number
+  question: string
+  icon: string
+  correctAnswer: boolean
 }
+
+const ProposalQuizApp: React.FC = () => {
+  const [gameState, setGameState] = useState<
+    'intro' | 'quiz' | 'result' | 'gift'
+  >('intro')
+  const [currentQuestion, setCurrentQuestion] = useState<number>(0)
+  const [selectedAnswer, setSelectedAnswer] = useState<boolean | null>(null)
+  const [answers, setAnswers] = useState<boolean[]>([])
+  const [showGift, setShowGift] = useState<boolean>(false)
+
+  const questions: Question[] = [
+    {
+      id: 1,
+      question: '선주는 매일 20분씩 서방님에게 안마를 해준다',
+      icon: '💆‍♀️',
+      correctAnswer: true,
+    },
+    {
+      id: 2,
+      question: '집안일은 7:3 비율로 선주가 7 호빈 3이다.',
+      icon: '🧹',
+      correctAnswer: true,
+    },
+    {
+      id: 3,
+      question: '치즈나 하몽이 먹고 싶을때는 선주가 벌떡 일어나서 잘라준다',
+      icon: '🧀',
+      correctAnswer: true,
+    },
+    {
+      id: 4,
+      question: '저녁은 매일 9첩 반상으로 선주가 차려준다.',
+      icon: '🍱',
+      correctAnswer: true,
+    },
+    {
+      id: 5,
+      question: '호빈이는 언제든 롤을 할 수 있는 자유가 있다.',
+      icon: '🎮',
+      correctAnswer: true,
+    },
+    {
+      id: 6,
+      question:
+        '선주가 화가나거나 기분이 안좋을 시 호빈이가 뽀뽀하면 다 풀린다.',
+      icon: '💋',
+      correctAnswer: true,
+    },
+    {
+      id: 7,
+      question: '의견이 대립될시 호빈이의 의견이 우선이다.',
+      icon: '👑',
+      correctAnswer: true,
+    },
+    {
+      id: 8,
+      question: '이 모든 것은 종신계약이므로 평생 따라야한다.',
+      icon: '📜',
+      correctAnswer: true,
+    },
+    {
+      id: 9,
+      question: '사실 이건 호빈이의 꿈이고 반대로 하는게 맞다.',
+      icon: '🌙',
+      correctAnswer: true,
+    },
+  ]
+
+  const handleAnswer = (answer: boolean) => {
+    setSelectedAnswer(answer)
+    const newAnswers = [...answers, answer]
+    setAnswers(newAnswers)
+
+    if (currentQuestion < questions.length - 1) {
+      setCurrentQuestion(currentQuestion + 1)
+      setSelectedAnswer(null)
+    } else {
+      setGameState('result')
+    }
+  }
+
+  const resetQuiz = () => {
+    setGameState('intro')
+    setCurrentQuestion(0)
+    setSelectedAnswer(null)
+    setAnswers([])
+    setShowGift(false)
+  }
+
+  const startQuiz = () => {
+    setGameState('quiz')
+  }
+
+  const openGift = () => {
+    setShowGift(true)
+  }
+
+  const allCorrect = answers.every((answer) => answer === true)
+  const progress =
+    ((currentQuestion + (selectedAnswer !== null ? 1 : 0)) / questions.length) *
+    100
+
+  // 인트로 화면
+  if (gameState === 'intro') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-pink-400 via-red-400 to-purple-500 flex flex-col justify-center px-4 py-8">
+        <div className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md mx-auto">
+          <div className="text-center mb-8">
+            <div className="text-6xl mb-4 animate-pulse">💝</div>
+            <h1 className="text-2xl font-bold text-gray-800 mb-6">
+              프로포즈 선물 퀴즈
+            </h1>
+            <div className="bg-pink-50 rounded-2xl p-6 mb-6">
+              <p className="text-gray-700 text-sm leading-relaxed">
+                <span className="font-bold text-pink-600">선주의 선택</span>이
+                시작됩니다!
+                <br />
+                <br />
+                자 프로포즈 선물이 뭔지 궁금하지요?
+                <br />
+                <br />
+                그럼 다음 보기를 읽고 선택하셔야합니다.
+                <br />
+                <br />
+                <span className="font-bold text-red-500">
+                  하나라도 아니오로 선택하실 경우 안타깝지만 선물을 받으실 수
+                  없습니다.
+                </span>
+                <br />
+                <br />자 시작해볼까요?
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={startQuiz}
+            className="w-full bg-gradient-to-r from-pink-500 to-red-500 active:from-pink-600 active:to-red-600 text-white font-bold py-4 px-6 rounded-full transition-all duration-300 transform active:scale-95 shadow-lg flex items-center justify-center"
+          >
+            <Play className="w-5 h-5 mr-2" />
+            시작하기
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  // 퀴즈 화면
+  if (gameState === 'quiz') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-pink-400 via-red-400 to-purple-500 flex flex-col justify-center px-4 py-8">
+        <div className="bg-white rounded-3xl shadow-2xl p-6 w-full max-w-md mx-auto">
+          {/* Progress Bar */}
+          <div className="mb-6">
+            <div className="flex justify-between items-center mb-3">
+              <span className="text-xs font-medium text-gray-600">진행률</span>
+              <span className="text-xs font-medium text-gray-600">
+                {currentQuestion + 1} / {questions.length}
+              </span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+              <div
+                className="bg-gradient-to-r from-pink-500 to-red-500 h-2 rounded-full transition-all duration-700 ease-out"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+          </div>
+
+          {/* Question */}
+          <div className="text-center mb-8">
+            <div className="text-5xl mb-4 animate-bounce">
+              {questions[currentQuestion].icon}
+            </div>
+            <h2 className="text-xl font-bold text-gray-800 mb-3">
+              질문 {currentQuestion + 1}
+            </h2>
+            <p className="text-base text-gray-600 leading-relaxed px-2">
+              {questions[currentQuestion].question}
+            </p>
+          </div>
+
+          {/* Answer Buttons */}
+          <div className="space-y-4">
+            <button
+              onClick={() => handleAnswer(true)}
+              disabled={selectedAnswer !== null}
+              className={`w-full py-4 px-4 rounded-2xl font-bold text-base transition-all duration-300 transform active:scale-95 shadow-lg ${
+                selectedAnswer === true
+                  ? 'bg-green-500 text-white scale-105'
+                  : selectedAnswer === null
+                    ? 'bg-gradient-to-r from-green-400 to-green-500 active:from-green-500 active:to-green-600 text-white'
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              }`}
+            >
+              <div className="flex items-center justify-center">
+                <CheckCircle className="w-5 h-5 mr-2" />네
+              </div>
+            </button>
+
+            <button
+              onClick={() => handleAnswer(false)}
+              disabled={selectedAnswer !== null}
+              className={`w-full py-4 px-4 rounded-2xl font-bold text-base transition-all duration-300 transform active:scale-95 shadow-lg ${
+                selectedAnswer === false
+                  ? 'bg-red-500 text-white scale-105'
+                  : selectedAnswer === null
+                    ? 'bg-gradient-to-r from-red-400 to-red-500 active:from-red-500 active:to-red-600 text-white'
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              }`}
+            >
+              <div className="flex items-center justify-center">
+                <XCircle className="w-5 h-5 mr-2" />
+                아니오
+              </div>
+            </button>
+          </div>
+
+          {/* Loading indicator when answer is selected */}
+          {selectedAnswer !== null && (
+            <div className="mt-6 text-center">
+              <div className="inline-flex items-center px-3 py-2 bg-gray-100 rounded-full">
+                <div className="animate-spin rounded-full h-3 w-3 border-2 border-pink-500 border-t-transparent mr-2"></div>
+                <span className="text-gray-600 text-sm">다음 질문으로...</span>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    )
+  }
+
+  // 결과 화면
+  if (gameState === 'result') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-pink-400 via-red-400 to-purple-500 flex flex-col justify-center px-4 py-8">
+        <div className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md mx-auto">
+          <div className="text-center mb-8">
+            <div className="text-6xl mb-4 animate-bounce">✨</div>
+            <h1 className="text-2xl font-bold text-gray-800 mb-6">
+              모든 선택을 완료하셨습니다!
+            </h1>
+
+            {allCorrect ? (
+              <div className="bg-green-50 rounded-2xl p-6 mb-6">
+                <div className="text-4xl mb-4">🎉</div>
+                <h2 className="text-xl font-bold text-green-600 mb-4">
+                  축하합니다!
+                </h2>
+                <p className="text-gray-700 text-sm">
+                  모든 조건에 동의하셨습니다!
+                  <br />
+                  이제 특별한 선물을 받으실 수 있습니다.
+                </p>
+              </div>
+            ) : (
+              <div className="bg-red-50 rounded-2xl p-6 mb-6">
+                <div className="text-4xl mb-4">😢</div>
+                <h2 className="text-xl font-bold text-red-600 mb-4">
+                  아쉽네요!
+                </h2>
+                <p className="text-gray-700 text-sm">
+                  하나 이상의 조건에 동의하지 않으셨습니다.
+                  <br />
+                  안타깝지만 선물을 받으실 수 없습니다.
+                </p>
+              </div>
+            )}
+          </div>
+
+          <div className="space-y-3">
+            {allCorrect && (
+              <button
+                onClick={openGift}
+                className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 active:from-yellow-500 active:to-orange-600 text-white font-bold py-4 px-6 rounded-full transition-all duration-300 transform active:scale-95 shadow-lg flex items-center justify-center mb-4"
+              >
+                <Gift className="w-5 h-5 mr-2" />
+                선물 열기
+              </button>
+            )}
+
+            <button
+              onClick={resetQuiz}
+              className="w-full bg-gradient-to-r from-pink-500 to-red-500 active:from-pink-600 active:to-red-600 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 transform active:scale-95 shadow-lg flex items-center justify-center"
+            >
+              <RotateCcw className="w-4 h-4 mr-2" />
+              다시 시작
+            </button>
+          </div>
+        </div>
+
+        {showGift && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-3xl p-8 max-w-sm w-full">
+              <div className="text-center">
+                <div className="text-6xl mb-4">🎁</div>
+                <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                  축하합니다!
+                </h2>
+                <div className="bg-gradient-to-r from-yellow-400 to-orange-500 rounded-2xl p-6 mb-6">
+                  <img
+                    src="https://search.pstatic.net/common/?src=http%3A%2F%2Fshop1.phinf.naver.net%2F20241204_12%2F1733299533852qs0Lb_JPEG%2F67432369768094028_675064577.jpg&type=sc960_832"
+                    alt="디올 카로백"
+                    className="w-32 h-32 object-cover rounded-lg mx-auto mb-4"
+                  />
+                  <h3 className="text-lg font-bold text-white mb-3">
+                    디올 카로백을 드립니다.
+                  </h3>
+                  <p className="text-white text-sm font-medium">
+                    롯데타워 디올매장에서 선물을 수령하세요.
+                  </p>
+                </div>
+                <button
+                  onClick={() => setShowGift(false)}
+                  className="w-full bg-gradient-to-r from-pink-500 to-red-500 text-white font-bold py-3 px-6 rounded-full"
+                >
+                  <Heart className="w-4 h-4 mr-2 inline" />
+                  고마워요!
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  return null
+}
+
+export default ProposalQuizApp
