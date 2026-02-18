@@ -13,19 +13,19 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: '프로포즈 선물 퀴즈 - 선주의 선택',
+  title: '프로포즈 선물 퀴즈 - 주영의 선택',
   description: '특별한 프로포즈 선물을 받기 위한 퀴즈입니다.',
-  keywords: ['프로포즈', '선물', '퀴즈', '선주', '호빈'],
-  authors: [{ name: '호빈' }],
-  creator: '호빈',
-  publisher: '호빈',
+  keywords: ['프로포즈', '선물', '퀴즈', '주영', '효원'],
+  authors: [{ name: '효원' }],
+  creator: '효원',
+  publisher: '효원',
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
   openGraph: {
-    title: '프로포즈 선물 퀴즈 - 선주의 선택',
+    title: '프로포즈 선물 퀴즈 - 주영의 선택',
     description: '특별한 프로포즈 선물을 받기 위한 퀴즈입니다.',
     url: 'https://propose-pink.vercel.app',
     siteName: '프로포즈 선물 퀴즈',
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
         url: 'https://mono-color.com/web/product/big/201712/12_shop1_921494.jpg',
         width: 960,
         height: 832,
-        alt: '디올 카로백 - 프로포즈 선물',
+        alt: '프로포즈 선물',
       },
     ],
     locale: 'ko_KR',
